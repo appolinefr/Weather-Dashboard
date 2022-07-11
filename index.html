@@ -7,7 +7,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="/assets/css/style.css" />
+    <!-- <link rel="stylesheet" href="/assets/css/style.css" /> -->
     <title>Weather Dashboard</title>
   </head>
   <body>
@@ -62,12 +62,12 @@
         <div class="col-12 col-md-8 col-xl-9">
           <div class="row">
             <div class="container jumbotron">
-              <h2>City name + date + weather emoji</h2>
-              <ul>
-                <li>Temp</li>
-                <li>Wind</li>
-                <li>humidity</li>
-                <li>uv index</li>
+              <h2 id="city"></h2>
+              <ul id="cityListEl">
+                <li id="temperature"></li>
+                <li id="wind"></li>
+                <li id="humidity"></li>
+                <li id="uvIndex"></li>
               </ul>
             </div>
           </div>
