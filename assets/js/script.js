@@ -1,49 +1,64 @@
-//I need the weather of the city I search to be dispayed in the main container.
 var searchFormInput = document.getElementById("citySearchForm");
-// var city = searchFormInput.value.trim();
-var city = "London";
 
 var searchSubmitHandler = function (event) {
   event.preventDefault();
 
+  var city = searchFormInput.value.trim();
+
   if (city) {
-    getWeather(city);
+    getCoordinates(city);
   } else {
     alert("Please enter a city");
   }
 };
 
 //I need a function that will get the coordinates of a city
-function getCoordinates(city) {
-  var city = "London";
+function getWeather() {
+  // var city = searchFormInput.value.trim();
+  var city = "Paris";
   var apiKey = "9915cf3d854b5f563abb5811b69f8cd9";
-  var queryURL =
+  var coordQueryURL =
     "http://api.openweathermap.org/geo/1.0/direct?q=" +
     city +
     "&appid=" +
     apiKey;
 
-  fetch(queryURL)
+  fetch(coordQueryURL)
     .then(function (response) {
       if (response.ok) {
       }
       return response.json();
     })
     .then(function (data) {
-      {
-        console.log(data[0].lat);
-        console.log(data[0].lon);
-      }
+      var queryURL =
+        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+        data[0].lat +
+        "&lon=" +
+        data[0].lon +
+        "&daily&appid=" +
+        apiKey;
+
+      fetch(queryURL)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          weather = data.timezone;
+          console.log(weather);
+        });
     });
 }
-getCoordinates();
 
-// function getWeather() {
+getWeather();
+
+// var getWeather = function () {
 //   var apiKey = "9915cf3d854b5f563abb5811b69f8cd9";
 //   var queryURL =
-//     "http://api.openweathermap.org/data/2.5/weather?q=" +
-//     city +
-//     "&appid=" +
+//     "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+//     latitude +
+//     "&lon=" +
+//     longitude +
+//     "&daily&appid=" +
 //     apiKey;
 
 //   fetch(queryURL)
@@ -51,20 +66,11 @@ getCoordinates();
 //       return response.json();
 //     })
 //     .then(function (data) {
-//       for (var i = 0; i < data.length; i++) {
-//         console.log(data[i].weather.main);
-//       }
+//       weather = data.current.weather.description;
+//       console.log(weather);
 //     });
-// }
+// };
 
-//   fetch(queryURL).then(function (response) {
-//     return response.json();
-//   });
-//   then(function (data) {
-//     //I need a for each to create content that will hold the main ity info
+//I need to save the get weather function to local storage
 
-//     mainCity.textContent = data.timezone;
-//     temperature.textContent = data.current.temp;
-//     wind.textContent = data.current.wind;
-//   });
-// }
+//I need a function to dynamically display results on page
