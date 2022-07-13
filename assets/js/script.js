@@ -10,12 +10,15 @@ var searchSubmitHandler = function (event) {
 
   // need to add cappitalisation of first letter
   var city = searchFormInput.value.trim();
-
+  var date = moment().format("DD/ MM/ YYYY");
   if (city) {
     var cityName = document.createElement("h2");
-    cityName.textContent = city;
+    cityName.textContent = city + " " + date;
     mainWeather.appendChild(cityName);
+
     getWeather(city);
+
+    searchFormInput.value = "";
   } else {
     alert("Please enter a city");
   }
@@ -65,34 +68,38 @@ var displayWeather = function (data) {
   var weatherList = document.createElement("ul");
   mainWeather.appendChild(weatherList);
 
-  // creating elements for each item
+  // creating elements for temperature
   var temperature = document.createElement("li");
   currentTemperature = Math.round(data.current.temp);
   temperature.textContent = "Temperature: " + currentTemperature + "°";
   weatherList.appendChild(temperature);
   console.log(temperature);
 
-  // creating elements for each item
+  // creating elements for humidity
   var humidity = document.createElement("li");
   currentHumidity = Math.round(data.current.humidity);
   humidity.textContent = "Humidity: " + currentHumidity + "%";
   weatherList.appendChild(humidity);
   console.log(humidity);
 
-  // creating elements for each item
+  // creating elements for wind
   var wind = document.createElement("li");
   currentWind = Math.round(data.current.wind_speed);
   wind.textContent = "Wind: " + currentWind + "KM/H";
   weatherList.appendChild(wind);
   console.log(wind);
 
-  // creating elements for each item
+  // creating elements for uvIndex
   var uvIndex = document.createElement("li");
   currentuvIndex = Math.round(data.current.uvi);
   uvIndex.textContent = "UV Index: " + currentuvIndex;
   weatherList.appendChild(uvIndex);
   console.log(uvIndex);
+
+  // Need to add function for uv index color change
 };
+
+// var displayForecast = function (data) {};
 
 searchBtn.addEventListener("click", searchSubmitHandler);
 
