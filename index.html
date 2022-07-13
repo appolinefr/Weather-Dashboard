@@ -12,25 +12,32 @@
   </head>
   <body>
     <header class="container-fluid"></header>
-    <section class="container my-5">
-      <div class="row">
-        <div class="col-12 col-md-4 col-xl-3">
-          <h1>Search for a city:</h1>
-          <form>
-            <div class="mb-3">
-              <input type="citySearch" class="citySearch" id="citySearchForm" />
-            </div>
-            <button type="submit" class="btn btn-secondary">Search</button>
-          </form>
-          <hr />
-        </div>
-        <div class="col-12 col-md-8 col-xl-9">
-          <div class="row">
-            <div class="container jumbotron"></div>
+    <main>
+      <section class="container my-5">
+        <div class="row">
+          <div class="col-12 col-md-4 col-xl-3">
+            <h1>Search for a city:</h1>
+            <form>
+              <div class="mb-3">
+                <input
+                  type="citySearch"
+                  class="citySearch"
+                  id="citySearchForm"
+                />
+              </div>
+              <button type="submit" class="btn btn-secondary" id="searchBtn">
+                Search
+              </button>
+            </form>
+            <hr />
           </div>
-          <div class="container mb-4"></div>
-          <div class="row">
-            <!-- <div class="col">
+          <div class="col-12 col-md-8 col-xl-9">
+            <div class="row">
+              <div class="container-fluid" id="mainWeather"></div>
+            </div>
+            <div class="container mb-4"></div>
+            <div class="row" id="forecast">
+              <!-- <div class="col">
               <ul>
                 <li>date</li>
                 <li>Weather emoji</li>
@@ -39,10 +46,11 @@
                 <li>humidity</li>
               </ul>
             </div> -->
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
     <script src="./assets/js/script.js"></script>
   </body>
 </html>
