@@ -2,6 +2,7 @@
 var searchFormInput = document.getElementById("citySearchForm");
 var searchBtn = document.getElementById("searchBtn");
 var forecastContainer = document.getElementById("forecast");
+var weatherIcon = document.querySelector(".icon");
 
 //function facilitating the event listener on the search button
 var searchSubmitHandler = function (event) {
@@ -46,6 +47,7 @@ function getWeather(city) {
         "&daily&appid=" +
         apiKey;
 
+      //fetching city with the coordinates from previous call
       fetch(queryURL).then(function (response) {
         if (response.ok) {
           response.json().then(function (data) {
@@ -61,9 +63,23 @@ function getWeather(city) {
 // function to display current weather
 var displayWeather = function (data) {
   console.log(data);
+
+  // var mainContainer = document.getElementById("mainWeather");
+  // mainContainer.setAttribute("class", "border");
+
+  var icon = document.createElement("img");
+  icon.setAttribute(
+    "src",
+    "https://openweathermap.org/img/wn/" +
+      data.current.weather[0].icon +
+      "@2x.png"
+  );
+
+  weatherIcon.appendChild(icon);
+
   var temperature = document.querySelector(".temp");
   temperature.textContent =
-    "Temperature: " + Math.round(data.current.temp) + "°";
+    "Temperature: " + Math.round(data.current.temp) + "°C";
 
   // creating elements for humidity
   var humidity = document.querySelector(".humidity");
@@ -74,78 +90,60 @@ var displayWeather = function (data) {
   wind.textContent = "Wind: " + Math.round(data.current.wind_speed) + "KM/H";
 
   // creating elements for uvIndex
-  var uvIndex = document.querySelector(".uv");
+  var uvIndex = document.querySelector(".uvIndex");
   uvIndex.textContent = "UV Index: " + Math.round(data.current.uvi);
 
-  if (uvIndex < 3) {
+  if (uvIndex <= 3) {
     //if uv index is low (1-2)
     uvIndex.setAttribute("class", "bgColor: bg-success", "color: text-light ");
-  } else if (uvIndex > 2 && uvIndex < 6) {
-    //if uv index is mocerate (3-5)
+  } else if (uvIndex > 3 && uvIndex < 6) {
+    //if uv index is moderate (3-5)
     uvIndex.setAttribute("class", "bgColor: bg-warning", "color: text-dark ");
   } //if uv index is high (6+)
   else {
     uvIndex.setAttribute("class", "bgColor: bg-danger", "color: text-light ");
   }
 
+  //dynamically creating elements for each forecast day and appending them to foreacst container
   for (let i = 0; i < 6; i++) {
     let forecastColumn = document.createElement("div");
     forecastColumn.setAttribute("class", "col");
     forecastContainer.appendChild(forecastColumn);
 
     let dateEl = document.createElement("p");
-    dateEl.textContent = data.daily[i].dt;
+    dateEl.textContent = new Date(data.daily[i].dt * 1000);
+    dateEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(dateEl);
-    let iconEl = document.createElement("p");
-    iconEl.textContent = data.daily[i].weather[0].icon;
-    forecastColumn.appendChild(iconEl);
+
+    let forecastIcon = document.createElement("img");
+    forecastIcon.setAttribute(
+      "src",
+      "https://openweathermap.org/img/wn/" +
+        data.daily[i].weather[0].icon +
+        "@2x.png"
+    );
+
+    forecastIcon.setAttribute("alt", data.daily[i].weather[0].description);
+    forecastColumn.appendChild(forecastIcon);
+
     let humidityEl = document.createElement("p");
-    humidityEl.textContent = data.daily[i].humidity;
+    humidityEl.textContent = Math.round(data.daily[i].humidity) + " % humidity";
+    humidityEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(humidityEl);
+
     let windEl = document.createElement("p");
-    windEl.textContent = data.daily[i].wind_speed;
+    windEl.textContent = Math.round(data.daily[i].wind_speed) + " km/h";
+    windEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(windEl);
+
     let tempEl = document.createElement("p");
-    tempEl.textContent = data.daily[i].temp.day;
+    tempEl.textContent = Math.round(data.daily[i].temp.day) + " °C";
+    tempEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(tempEl);
   }
 };
 
-// var displayForecast = function (data) {
-//I need to create a block that will hold info to display for each day and then do a loop to repeat for each of 5 day forecast
-
-//   for (let i = 0; i < 6; i++) {
-//     const forecastEls = document.querySelectorAll(".forecastColumn");
-//     for (i = 0; i < forecastEls.length; i++) {
-//       const forecastWeatherEl = document.createElement("img");
-//       forecastWeatherEl.setAttribute(
-//         "src",
-//         "https://openweathermap.org/img/wn/" +
-//           data.list[i].weather[0].icon +
-//           "@2x.png"
-//       );
-//       forecastWeatherEl.setAttribute(
-//         "alt",
-//         data.list[i].weather[0].description
-//       );
-//       forecastEls[i].append(forecastWeatherEl);
-//       const forecastTempEl = document.createElement("p");
-//       forecastTempEl.innerHTML =
-//         "Temp: " + k2f(data.list[forecastIndex].main.temp);
-//       forecastEls[i].append(forecastTempEl);
-//       const forecastHumidityEl = document.createElement("p");
-//       forecastHumidityEl.innerHTML =
-//         "Humidity: " + data.list[forecastIndex].main.humidity + "%";
-//       forecastEls[i].append(forecastHumidityEl);
-//     }
-//   }
-// };
-
 searchBtn.addEventListener("click", searchSubmitHandler);
-//
-// };
-
-//     const forecastDate = new Date(response.data.list[forecastIndex].dt * 1000);
 
 //I need to save the get weather function to local storage
 
