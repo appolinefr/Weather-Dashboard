@@ -10,7 +10,7 @@ var searchSubmitHandler = function (event) {
 
   // need to add cappitalisation of first letter
   var city = searchFormInput.value.trim();
-  var date = moment().format("DD/ MM/YYYY");
+  var date = moment().format("DD/MM/YYYY");
   if (city) {
     var cityName = document.querySelector(".city");
     cityName.textContent = city + " " + date;
@@ -101,17 +101,17 @@ var displayWeather = function (data) {
     uvIndex.setAttribute("class", "bgColor: bg-warning", "color: text-dark ");
   } //if uv index is high (6+)
   else {
-    uvIndex.setAttribute("class", "bgColor: bg-danger", "color: text-light ");
+    uvIndex.setAttribute("class", "color: text-light ");
   }
 
   //dynamically creating elements for each forecast day and appending them to foreacst container
-  for (let i = 0; i < 6; i++) {
+  for (let i = 1; i < 6; i++) {
     let forecastColumn = document.createElement("div");
     forecastColumn.setAttribute("class", "col");
     forecastContainer.appendChild(forecastColumn);
 
     let dateEl = document.createElement("p");
-    dateEl.textContent = new Date(data.daily[i].dt * 1000);
+    dateEl.textContent = new Date(data.daily[i].dt * 1000).toLocaleDateString();
     dateEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(dateEl);
 
