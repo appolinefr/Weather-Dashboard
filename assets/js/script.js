@@ -3,6 +3,7 @@ var searchFormInput = document.getElementById("citySearchForm");
 var searchBtn = document.getElementById("searchBtn");
 var forecastContainer = document.getElementById("forecast");
 var weatherIcon = document.querySelector(".icon");
+var weatherContainer = document.getElementById("containerMain");
 
 //function facilitating the event listener on the search button
 var searchSubmitHandler = function (event) {
@@ -64,8 +65,7 @@ function getWeather(city) {
 var displayWeather = function (data) {
   console.log(data);
 
-  // var mainContainer = document.getElementById("mainWeather");
-  // mainContainer.setAttribute("class", "border");
+  weatherContainer.setAttribute("class", "border");
 
   var icon = document.createElement("img");
   icon.setAttribute(
@@ -132,12 +132,13 @@ var displayWeather = function (data) {
     forecastColumn.appendChild(humidityEl);
 
     let windEl = document.createElement("p");
-    windEl.textContent = Math.round(data.daily[i].wind_speed) + " km/h";
+    windEl.textContent =
+      "Wind: " + Math.round(data.daily[i].wind_speed) + " km/h";
     windEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(windEl);
 
     let tempEl = document.createElement("p");
-    tempEl.textContent = Math.round(data.daily[i].temp.day) + " °C";
+    tempEl.textContent = "Temp: " + Math.round(data.daily[i].temp.day) + " °C";
     tempEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(tempEl);
   }
