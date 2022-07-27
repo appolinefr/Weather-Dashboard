@@ -4,16 +4,24 @@ var searchBtn = document.getElementById("searchBtn");
 var forecastContainer = document.getElementById("forecast");
 var weatherIcon = document.querySelector(".icon");
 var weatherContainer = document.getElementById("containerMain");
+var cityName = document.querySelector(".city");
+var searchHistory = document.getElementById("cityList");
 
+//I need an empty array that will hold each city from search and save it in local storage
+var cityHistory = [];
+
+//document.ready function to get local storage and clear search input?This question already has answers here:
+
+document.addEventListener("DOMContentLoaded", () => {
+  getSavedCity();
+});
 //function facilitating the event listener on the search button
 var searchSubmitHandler = function (event) {
   event.preventDefault();
 
-  // need to add cappitalisation of first letter
   var city = searchFormInput.value.trim();
   var date = moment().format("DD/MM/YYYY");
   if (city) {
-    var cityName = document.querySelector(".city");
     cityName.textContent = city + " " + date;
     getWeather(city);
 
@@ -62,11 +70,10 @@ function getWeather(city) {
 }
 
 // function to display current weather
-var displayWeather = function (data) {
-  console.log(data);
-
+function displayWeather(data) {
   weatherContainer.setAttribute("class", "border");
 
+  //displaying icon element
   var icon = document.createElement("img");
   icon.setAttribute(
     "src",
@@ -77,19 +84,20 @@ var displayWeather = function (data) {
 
   weatherIcon.appendChild(icon);
 
+  //displaying temp element
   var temperature = document.querySelector(".temp");
   temperature.textContent =
     "Temperature: " + Math.round(data.current.temp) + "°C";
 
-  // creating elements for humidity
+  //displaying humidity element
   var humidity = document.querySelector(".humidity");
   humidity.textContent = "Humidity: " + Math.round(data.current.humidity) + "%";
 
-  // creating elements for wind
+  // displaying wind element
   var wind = document.querySelector(".wind");
   wind.textContent = "Wind: " + Math.round(data.current.wind_speed) + "KM/H";
 
-  // creating elements for uvIndex
+  // displaying uvindex element
   var uvIndex = document.querySelector(".uvIndex");
   uvIndex.textContent = "UV Index: " + Math.round(data.current.uvi);
 
@@ -142,14 +150,26 @@ var displayWeather = function (data) {
     tempEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(tempEl);
   }
-};
+}
 
-searchBtn.addEventListener("click", searchSubmitHandler);
+searchBtn.addEventListener("click", searchSubmitHandler, saveCity); // on click I need the search to push to savedcity, save it to storage and display it in a button
 
 //I need to save the get weather function to local storage
+function saveCity(data) {
+  var city = data.city.name; //get the city came
 
-//I need a function to dynamically display results on page
+  cityHistory.push(city);
+  localStorage.setItem("cityHistory", JSON.stringify(cityHistory)); //convert to a string and sent to local storage
+}
 
-//I need an empty array that will hold each city from search and save it in local storage
 
-//I need to dynamically create buttons for each city that was searched
+//load locations from local storage to the savedCity array
+function getSavedCity() {
+  var savedCity = localStorage.getItem("cityHistory");
+  if (savedCity) {
+    //if not undefined
+    cityHistory = JSON.parse(savedCity); //input the rendering of history here
+  } else {
+    localStorage.setItem("cityHistory", JSON.stringify(cityHistory)); 
+  }
+}
