@@ -5,16 +5,24 @@ var forecastContainer = document.getElementById("forecast");
 var weatherIcon = document.querySelector(".icon");
 var weatherContainer = document.getElementById("containerMain");
 var cityName = document.querySelector(".city");
-var searchHistory = document.getElementById("cityList");
+var searchHistoryList = document.getElementById("cityHistory");
 
 //I need an empty array that will hold each city from search and save it in local storage
-var cityHistory = [];
+var citiesHistory = [];
 
 //document.ready function to get local storage and clear search input?This question already has answers here:
 
 document.addEventListener("DOMContentLoaded", () => {
-  getSavedCity();
+  var savedCity = localStorage.getItem("citiesHistory");
+  if (savedCity) {
+    //if not undefined
+    citiesHistory = JSON.parse(savedCity); //input the rendering of history here
+  } else {
+    localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory));
+  }
+  renderCities();
 });
+
 //function facilitating the event listener on the search button
 var searchSubmitHandler = function (event) {
   event.preventDefault();
@@ -47,6 +55,8 @@ function getWeather(city) {
       return response.json();
     })
     .then(function (data) {
+      console.log(data);
+      saveCity(data);
       var queryURL =
         "https://api.openweathermap.org/data/2.5/onecall?lat=" +
         data[0].lat +
@@ -71,6 +81,7 @@ function getWeather(city) {
 
 // function to display current weather
 function displayWeather(data) {
+  console.log(data);
   weatherContainer.setAttribute("class", "border");
 
   //displaying icon element
@@ -152,24 +163,35 @@ function displayWeather(data) {
   }
 }
 
-searchBtn.addEventListener("click", searchSubmitHandler, saveCity); // on click I need the search to push to savedcity, save it to storage and display it in a button
+searchBtn.addEventListener("click", searchSubmitHandler); // on click I need the search to push to savedcity, save it to storage and display it in a button
 
 //I need to save the get weather function to local storage
 function saveCity(data) {
-  var city = data.city.name; //get the city came
-
-  cityHistory.push(city);
-  localStorage.setItem("cityHistory", JSON.stringify(cityHistory)); //convert to a string and sent to local storage
+  var city = data[0].name; //get the city came
+  citiesHistory.push(city);
+  localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory)); //convert to a string and sent to local storage
 }
 
+function renderCities() {
+  // Render a new li for each city
+  for (var i = 0; i < citiesHistory.length; i++) {
+    var cityHistory = citiesHistory[i];
 
-//load locations from local storage to the savedCity array
-function getSavedCity() {
-  var savedCity = localStorage.getItem("cityHistory");
-  if (savedCity) {
-    //if not undefined
-    cityHistory = JSON.parse(savedCity); //input the rendering of history here
-  } else {
-    localStorage.setItem("cityHistory", JSON.stringify(cityHistory)); 
+    var a = document.createElement("a");
+    a.textContent = cityHistory;
+    a.setAttribute("data-index", i);
+    searchHistoryList.appendChild(a);
   }
 }
+
+// Add click event to city elements
+searchHistoryList.addEventListener("click", function (event) {
+  var element = event.target;
+
+  // Checks if element is a link
+  if (element.matches("a") === true) {
+    // Get its data-index value
+    var city = element.parentElement.getAttribute("data-index");
+    displayWeather(city);
+  }
+});
