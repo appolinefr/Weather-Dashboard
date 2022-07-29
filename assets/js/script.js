@@ -6,6 +6,7 @@ var weatherIcon = document.querySelector(".icon");
 var weatherContainer = document.getElementById("containerMain");
 var cityName = document.querySelector(".city");
 var searchHistoryList = document.getElementById("cityHistory");
+var date = moment().format("DD/MM/YYYY");
 
 //I need an empty array that will hold each city from search and save it in local storage
 var citiesHistory = [];
@@ -39,7 +40,6 @@ function getWeather(city) {
       return response.json();
     })
     .then(function (data) {
-      saveCity(data);
       var queryURL =
         "https://api.openweathermap.org/data/2.5/onecall?lat=" +
         data[0].lat +
@@ -147,14 +147,16 @@ function displayWeather(data) {
   }
 }
 
-searchBtn.addEventListener("click", function searchCity(event) {
+searchBtn.addEventListener("click", function (event) {
   event.preventDefault();
 
   var city = searchFormInput.value.trim();
-  var date = moment().format("DD/MM/YYYY");
+
   if (city) {
     cityName.textContent = city + " " + date;
     getWeather(city);
+    citiesHistory.push(city);
+    localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory)); //convert to a string and sent to local storage
 
     searchFormInput.value = "";
   } else {
@@ -162,34 +164,19 @@ searchBtn.addEventListener("click", function searchCity(event) {
   }
 });
 
-//I need to save the get weather function to local storage
-function saveCity(data) {
-  var city = data[0].name; //get the city came
-  citiesHistory.push(city);
-  localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory)); //convert to a string and sent to local storage
-}
-
 function renderCities() {
   // Render a new button for each city
   for (var i = 0; i < citiesHistory.length; i++) {
-    var cityHistory = citiesHistory[i];
-
-    var button = document.createElement("button");
-    button.textContent = cityHistory;
-    button.setAttribute("data-index", i);
-    button.setAttribute("class", "btn btn-secondary m-1 bg-info text-white");
-    searchHistoryList.appendChild(button);
+    var historyBtn = document.createElement("button");
+    historyBtn.textContent = citiesHistory[i];
+    historyBtn.setAttribute(
+      "class",
+      "btn btn-secondary d-inline text-capitalize m-1 bg-info text-white"
+    );
+    historyBtn.addEventListener("click", function () {
+      getWeather(historyBtn.textContent);
+      cityName.textContent = historyBtn.innerHTML + " " + date;
+    });
+    searchHistoryList.appendChild(historyBtn);
   }
 }
-
-// Add click event to city elements
-searchHistoryList.addEventListener("click", function (event) {
-  var element = event.target;
-
-  // Checks if element is a link
-  if (element.matches("button") === true) {
-    // Get its data-index value
-    var city = element.parentElement.getAttribute("data-index");
-    displayWeather(city);
-  }
-});
