@@ -43,7 +43,7 @@ searchBtn.addEventListener("click", function (event) {
 function getWeather(city) {
   var apiKey = "9915cf3d854b5f563abb5811b69f8cd9";
   var coordQueryURL =
-    "http://api.openweathermap.org/geo/1.0/direct?q=" +
+    "https://api.openweathermap.org/geo/1.0/direct?q=" +
     city +
     "&appid=" +
     apiKey;
@@ -80,7 +80,8 @@ function getWeather(city) {
 // function to display current weather
 function displayWeather(data) {
   console.log(data);
-  weatherContainer.setAttribute("class", "border");
+
+  weatherContainer.setAttribute("class", "border rounded m-");
 
   //displaying icon element
   var icon = document.createElement("img");
@@ -125,7 +126,10 @@ function displayWeather(data) {
   //dynamically creating elements for each forecast day and appending them to foreacst container
   for (let i = 1; i < 6; i++) {
     let forecastColumn = document.createElement("div");
-    forecastColumn.setAttribute("class", "col");
+    forecastColumn.setAttribute(
+      "class",
+      "col rounded bg-info pt-2 text-white bg-opacity-75 m-1"
+    );
     forecastContainer.appendChild(forecastColumn);
 
     let dateEl = document.createElement("p");
@@ -166,11 +170,11 @@ function displayWeather(data) {
 function renderCities() {
   // Render a new button for each city
   for (var i = 0; i < citiesHistory.length; i++) {
-    var historyBtn = document.createElement("button");
+    let historyBtn = document.createElement("button");
     historyBtn.textContent = citiesHistory[i];
     historyBtn.setAttribute(
       "class",
-      "btn btn-secondary d-inline text-capitalize m-1 bg-info text-white"
+      "btn btn-secondary d-inline text-capitalize m-1 bg-grey text-white"
     );
     //event listener for historyBtn to retrieve the weather for each city searched
     historyBtn.addEventListener("click", function () {
