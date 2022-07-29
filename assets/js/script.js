@@ -11,9 +11,8 @@ var date = moment().format("DD/MM/YYYY");
 //I need an empty array that will hold each city from search and save it in local storage
 var citiesHistory = [];
 
-//document.ready function to get local storage and clear search input?This question already has answers here:
-
-document.addEventListener("DOMContentLoaded", () => {
+// the init function will retrieve cities from local storage
+function init() {
   var savedCity = localStorage.getItem("citiesHistory");
   if (savedCity) {
     //if not undefined
@@ -22,9 +21,25 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory));
   }
   renderCities();
-});
+}
+//event listener handling the search button click
+searchBtn.addEventListener("click", function (event) {
+  event.preventDefault();
 
-//I need a function that will get the coordinates of a city and then from those coordinates get the wether
+  var city = searchFormInput.value.trim();
+
+  if (city) {
+    cityName.textContent = city + " " + date;
+    getWeather(city);
+    citiesHistory.push(city);
+    localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory)); //convert to a string and sent to local storage
+
+    searchFormInput.value = "";
+  } else {
+    alert("Please enter a city");
+  }
+});
+// function that will get the coordinates of a city and then from those coordinates get the wether
 function getWeather(city) {
   var apiKey = "9915cf3d854b5f563abb5811b69f8cd9";
   var coordQueryURL =
@@ -147,23 +162,7 @@ function displayWeather(data) {
   }
 }
 
-searchBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-
-  var city = searchFormInput.value.trim();
-
-  if (city) {
-    cityName.textContent = city + " " + date;
-    getWeather(city);
-    citiesHistory.push(city);
-    localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory)); //convert to a string and sent to local storage
-
-    searchFormInput.value = "";
-  } else {
-    alert("Please enter a city");
-  }
-});
-
+// function to render search cities in buttons
 function renderCities() {
   // Render a new button for each city
   for (var i = 0; i < citiesHistory.length; i++) {
@@ -173,6 +172,7 @@ function renderCities() {
       "class",
       "btn btn-secondary d-inline text-capitalize m-1 bg-info text-white"
     );
+    //event listener for historyBtn to retrieve the weather for each city searched
     historyBtn.addEventListener("click", function () {
       getWeather(historyBtn.textContent);
       cityName.textContent = historyBtn.innerHTML + " " + date;
@@ -180,3 +180,4 @@ function renderCities() {
     searchHistoryList.appendChild(historyBtn);
   }
 }
+init();
