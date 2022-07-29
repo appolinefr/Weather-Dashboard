@@ -23,22 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCities();
 });
 
-//function facilitating the event listener on the search button
-var searchSubmitHandler = function (event) {
-  event.preventDefault();
-
-  var city = searchFormInput.value.trim();
-  var date = moment().format("DD/MM/YYYY");
-  if (city) {
-    cityName.textContent = city + " " + date;
-    getWeather(city);
-
-    searchFormInput.value = "";
-  } else {
-    alert("Please enter a city");
-  }
-};
-
 //I need a function that will get the coordinates of a city and then from those coordinates get the wether
 function getWeather(city) {
   var apiKey = "9915cf3d854b5f563abb5811b69f8cd9";
@@ -55,7 +39,6 @@ function getWeather(city) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
       saveCity(data);
       var queryURL =
         "https://api.openweathermap.org/data/2.5/onecall?lat=" +
@@ -110,17 +93,18 @@ function displayWeather(data) {
 
   // displaying uvindex element
   var uvIndex = document.querySelector(".uvIndex");
-  uvIndex.textContent = "UV Index: " + Math.round(data.current.uvi);
+  var currentUv = Math.round(data.current.uvi);
+  uvIndex.textContent = "UV Index: " + currentUv;
 
-  if (uvIndex <= 3) {
+  if (currentUv <= 3) {
     //if uv index is low (1-2)
-    uvIndex.setAttribute("class", "bgColor: bg-success", "color: text-light ");
+    uvIndex.setAttribute("class", "d-inline bg-success text-white");
   } else if (uvIndex > 3 && uvIndex < 6) {
     //if uv index is moderate (3-5)
-    uvIndex.setAttribute("class", "bgColor: bg-warning", "color: text-dark ");
+    currentUv.setAttribute("class", "d-inline bg-warning text-white");
   } //if uv index is high (6+)
   else {
-    uvIndex.setAttribute("class", "color: text-light ");
+    uvIndex.setAttribute("class", "d-inline bg-danger text-white");
   }
 
   //dynamically creating elements for each forecast day and appending them to foreacst container
@@ -163,7 +147,20 @@ function displayWeather(data) {
   }
 }
 
-searchBtn.addEventListener("click", searchSubmitHandler); // on click I need the search to push to savedcity, save it to storage and display it in a button
+searchBtn.addEventListener("click", function searchCity(event) {
+  event.preventDefault();
+
+  var city = searchFormInput.value.trim();
+  var date = moment().format("DD/MM/YYYY");
+  if (city) {
+    cityName.textContent = city + " " + date;
+    getWeather(city);
+
+    searchFormInput.value = "";
+  } else {
+    alert("Please enter a city");
+  }
+});
 
 //I need to save the get weather function to local storage
 function saveCity(data) {
@@ -173,14 +170,15 @@ function saveCity(data) {
 }
 
 function renderCities() {
-  // Render a new li for each city
+  // Render a new button for each city
   for (var i = 0; i < citiesHistory.length; i++) {
     var cityHistory = citiesHistory[i];
 
-    var a = document.createElement("a");
-    a.textContent = cityHistory;
-    a.setAttribute("data-index", i);
-    searchHistoryList.appendChild(a);
+    var button = document.createElement("button");
+    button.textContent = cityHistory;
+    button.setAttribute("data-index", i);
+    button.setAttribute("class", "btn btn-secondary m-1 bg-info text-white");
+    searchHistoryList.appendChild(button);
   }
 }
 
@@ -189,7 +187,7 @@ searchHistoryList.addEventListener("click", function (event) {
   var element = event.target;
 
   // Checks if element is a link
-  if (element.matches("a") === true) {
+  if (element.matches("button") === true) {
     // Get its data-index value
     var city = element.parentElement.getAttribute("data-index");
     displayWeather(city);
