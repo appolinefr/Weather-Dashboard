@@ -79,38 +79,31 @@ function getWeather(city) {
 
 // function to display current weather
 function displayWeather(data) {
-  console.log(data);
-
-  weatherContainer.setAttribute("class", "border rounded m-");
-
-  //displaying icon element
+  var temperature = document.querySelector(".temp");
+  var humidity = document.querySelector(".humidity");
+  var wind = document.querySelector(".wind");
+  var uvIndex = document.querySelector(".uvIndex");
+  var currentUv = Math.round(data.current.uvi);
   var icon = document.createElement("img");
+
+  temperature.textContent =
+    "Temperature: " + Math.round(data.current.temp) + "°C";
+  humidity.textContent = "Humidity: " + Math.round(data.current.humidity) + "%";
+  wind.textContent = "Wind: " + Math.round(data.current.wind_speed) + "KM/H";
+  uvIndex.textContent = "UV Index: " + currentUv;
+
+  weatherContainer.setAttribute(
+    "class",
+    "border rounded border-secondary border-3"
+  );
+
   icon.setAttribute(
     "src",
     "https://openweathermap.org/img/wn/" +
       data.current.weather[0].icon +
       "@2x.png"
   );
-
   weatherIcon.appendChild(icon);
-
-  //displaying temp element
-  var temperature = document.querySelector(".temp");
-  temperature.textContent =
-    "Temperature: " + Math.round(data.current.temp) + "°C";
-
-  //displaying humidity element
-  var humidity = document.querySelector(".humidity");
-  humidity.textContent = "Humidity: " + Math.round(data.current.humidity) + "%";
-
-  // displaying wind element
-  var wind = document.querySelector(".wind");
-  wind.textContent = "Wind: " + Math.round(data.current.wind_speed) + "KM/H";
-
-  // displaying uvindex element
-  var uvIndex = document.querySelector(".uvIndex");
-  var currentUv = Math.round(data.current.uvi);
-  uvIndex.textContent = "UV Index: " + currentUv;
 
   if (currentUv <= 3) {
     //if uv index is low (1-2)
@@ -126,18 +119,23 @@ function displayWeather(data) {
   //dynamically creating elements for each forecast day and appending them to foreacst container
   for (let i = 1; i < 6; i++) {
     let forecastColumn = document.createElement("div");
+    let dateEl = document.createElement("p");
+    let forecastIcon = document.createElement("img");
+    let humidityEl = document.createElement("p");
+    let windEl = document.createElement("p");
+    let tempEl = document.createElement("p");
+
+    dateEl.textContent = new Date(data.daily[i].dt * 1000).toLocaleDateString();
+    humidityEl.textContent = Math.round(data.daily[i].humidity) + " % humidity";
+    windEl.textContent =
+      "Wind: " + Math.round(data.daily[i].wind_speed) + " km/h";
+    tempEl.textContent = "Temp: " + Math.round(data.daily[i].temp.day) + " °C";
+
     forecastColumn.setAttribute(
       "class",
-      "col rounded bg-info pt-2 text-white bg-opacity-75 m-1"
+      "col-12 col-md-3 col-xl-2 mx-auto rounded bg-info pt-2 text-white m-1"
     );
-    forecastContainer.appendChild(forecastColumn);
-
-    let dateEl = document.createElement("p");
-    dateEl.textContent = new Date(data.daily[i].dt * 1000).toLocaleDateString();
-    dateEl.setAttribute("class", "text-center");
-    forecastColumn.appendChild(dateEl);
-
-    let forecastIcon = document.createElement("img");
+    forecastIcon.setAttribute("alt", data.daily[i].weather[0].description);
     forecastIcon.setAttribute(
       "src",
       "https://openweathermap.org/img/wn/" +
@@ -145,24 +143,12 @@ function displayWeather(data) {
         "@2x.png"
     );
 
-    forecastIcon.setAttribute("alt", data.daily[i].weather[0].description);
+    forecastContainer.appendChild(forecastColumn);
+    forecastColumn.appendChild(dateEl);
     forecastColumn.appendChild(forecastIcon);
-
-    let humidityEl = document.createElement("p");
-    humidityEl.textContent = Math.round(data.daily[i].humidity) + " % humidity";
-    humidityEl.setAttribute("class", "text-center");
-    forecastColumn.appendChild(humidityEl);
-
-    let windEl = document.createElement("p");
-    windEl.textContent =
-      "Wind: " + Math.round(data.daily[i].wind_speed) + " km/h";
-    windEl.setAttribute("class", "text-center");
-    forecastColumn.appendChild(windEl);
-
-    let tempEl = document.createElement("p");
-    tempEl.textContent = "Temp: " + Math.round(data.daily[i].temp.day) + " °C";
-    tempEl.setAttribute("class", "text-center");
     forecastColumn.appendChild(tempEl);
+    forecastColumn.appendChild(humidityEl);
+    forecastColumn.appendChild(windEl);
   }
 }
 
