@@ -58,6 +58,8 @@ function displayWeather(data) {
   let wind = document.querySelector("#wind");
   let dateElement = document.querySelector("#date");
   let icon = document.querySelector("#icon");
+  let uvIndex = document.querySelector("#uvIndex");
+  let currentUv = Math.round(data.current.uvi);
 
   temperature.innerHTML = Math.round(data.current.temp);
   description.innerHTML = data.current.weather[0].description;
@@ -65,6 +67,7 @@ function displayWeather(data) {
   wind.innerHTML = Math.round(data.current.wind_speed);
   dateElement.innerHTML = date;
   celsiusTemperature = Math.round(data.current.temp);
+  uvIndex.textContent = currentUv;
 
   icon.setAttribute(
     "src",
@@ -72,6 +75,16 @@ function displayWeather(data) {
   );
   icon.setAttribute("alt", data.current.weather[0].description);
 
+  if (currentUv <= 3) {
+    //if uv index is low (1-2)
+    uvIndex.setAttribute("class", " bg-success text-light ");
+  } else if (currentUv > 3 && currentUv < 6) {
+    //if uv index is moderate (3-5)
+    uvIndex.setAttribute("class", "bg-warning text-light ");
+  } //if uv index is high (6+)
+  else {
+    uvIndex.setAttribute("class", "bg-danger text-white");
+  }
   displayForecast(data);
 }
 

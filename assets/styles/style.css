@@ -45,12 +45,6 @@ a:hover {
 .date {
   color: #665d8a;
 }
-li:first-letter {
-  text-transform: capitalize;
-}
-.description:first-letter {
-  text-transform: capitalize;
-}
 
 .weather-app-wrapper {
   max-width: 1000px;
