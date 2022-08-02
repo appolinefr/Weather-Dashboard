@@ -1,11 +1,14 @@
-let date = moment().format("dddd, do MMMM");
-let fahrenheitLink = document.querySelector("#fahrenheit-link");
-let celsiusLink = document.querySelector("#celsius-link");
-let celsiusTemperature = null;
-let form = document.querySelector("#search-form");
-let searchHistoryList = document.getElementById("cityHistory");
-let citiesHistory = [];
+const date = moment().format("dddd, do MMMM");
+const fahrenheitLink = document.querySelector("#fahrenheit-link");
+const celsiusLink = document.querySelector("#celsius-link");
+const form = document.querySelector("#search-form");
+const searchHistoryList = document.getElementById("cityHistory");
 
+//I need an empty array that will hold each city from search and save it in local storage
+const citiesHistory = [];
+let celsiusTemperature = null;
+
+//formatting days for forecast
 function formatDay(timestamp) {
   let date = new Date(timestamp * 1000);
   let day = date.getDay();
@@ -15,6 +18,7 @@ function formatDay(timestamp) {
   return days[day];
 }
 
+// function dynamically creating columns and displaying forecast 
 function displayForecast(data) {
   let forecastElement = document.querySelector("#forecast");
 
@@ -51,6 +55,7 @@ function displayForecast(data) {
   forecastElement.innerHTML = forecastHTML;
 }
 
+//function displaying current weather 
 function displayWeather(data) {
   let temperature = document.querySelector("#temperature");
   let description = document.querySelector("#description");
@@ -88,6 +93,7 @@ function displayWeather(data) {
   displayForecast(data);
 }
 
+//I need a function that will get the coordinates of a city and then from those coordinates get the weather
 function search(city) {
   var apiKey = "9915cf3d854b5f563abb5811b69f8cd9";
   var coordQueryURL =
@@ -125,6 +131,7 @@ function search(city) {
     });
 }
 
+// function to render search cities in links appended to navbar
 function renderCities() {
   // Render a new link for each city
   for (var i = 0; i < citiesHistory.length; i++) {
@@ -138,16 +145,19 @@ function renderCities() {
   }
 }
 
+//function called once the search button is clicked
 function formSubmit(event) {
   event.preventDefault();
   let cityInputElement = document.querySelector("#city-input");
   let city = document.querySelector("#city");
   city.innerHTML = cityInputElement.value;
   search(cityInputElement.value);
+  //this will push the city searched to empty array defined at the top of script and set the city in local storage
   citiesHistory.push(cityInputElement.value);
   localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory));
 }
 
+//function displaying fahrenheit temp
 function displayFahrenheitTemperature(event) {
   event.preventDefault();
   let fahrenheitTemperature = (celsiusTemperature * 9) / 5 + 32;
@@ -155,16 +165,18 @@ function displayFahrenheitTemperature(event) {
   temperature.innerHTML = Math.round(fahrenheitTemperature);
 }
 
+// function displaying celsius temp
 function displayCelsiusTemperature(event) {
   event.preventDefault();
   let temperature = document.querySelector("#temperature");
   temperature.innerHTML = Math.round(celsiusTemperature);
 }
 
+//event listener handling the search button click
 form.addEventListener("submit", formSubmit, renderCities);
 
 fahrenheitLink.addEventListener("click", displayFahrenheitTemperature);
 
 celsiusLink.addEventListener("click", displayCelsiusTemperature);
 
-search("Melbourne");
+search("Paris");
