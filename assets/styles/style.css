@@ -13,7 +13,7 @@ body {
 
 .weather-app-wrapper {
   max-width: 1000px;
-  margin: 100px auto;
+  margin: 80px auto;
   border: 3px solid var(--mainColor);
   border-radius: 8px;
   padding: 50px;
@@ -32,17 +32,18 @@ body {
 }
 
 h1 {
+  margin-bottom: 26px;
   margin-top: 26px;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 100px;
-  line-height: 29px;
+  line-height: 30px;
   padding-bottom: 6px;
 }
 
 li {
   list-style: none;
   color: #b1aebb;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 100;
   line-height: 20px;
 }
@@ -50,7 +51,7 @@ li {
 p {
   padding-top: 8px;
   opacity: 0.9;
-  font-size: 14px;
+  font-size: 16px;
 }
 a,
 .temperature-min,
@@ -77,17 +78,8 @@ a:hover {
 }
 .weather-temperature .units {
   position: relative;
-  font-size: 16px;
+  font-size: 18px;
   top: -16px;
-}
-
-.humidity,
-.wind,
-.units,
-.date,
-.weather-forecast,
-p {
-  color: var(--mainColor);
 }
 .weather-temperature .active {
   cursor: pointer;
@@ -103,13 +95,22 @@ p {
   text-decoration: underline;
 }
 
+.humidity,
+.wind,
+.units,
+.date,
+.weather-forecast,
+p {
+  color: var(--mainColor);
+}
+
 .weather-forecast {
-  margin-top: 20px;
+  margin-top: 50px;
   text-align: center;
 }
 .weather-forecast-date {
-  font-size: 16px;
+  font-size: 18px;
 }
 .weather-forecast-temperature {
-  font-size: 13px;
+  font-size: 15px;
 }

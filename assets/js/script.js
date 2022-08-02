@@ -18,7 +18,7 @@ function formatDay(timestamp) {
   return days[day];
 }
 
-// function dynamically creating columns and displaying forecast 
+// function dynamically creating columns and displaying forecast
 function displayForecast(data) {
   let forecastElement = document.querySelector("#forecast");
 
@@ -55,7 +55,7 @@ function displayForecast(data) {
   forecastElement.innerHTML = forecastHTML;
 }
 
-//function displaying current weather 
+//function displaying current weather
 function displayWeather(data) {
   let temperature = document.querySelector("#temperature");
   let description = document.querySelector("#description");
@@ -82,7 +82,7 @@ function displayWeather(data) {
 
   if (currentUv <= 3) {
     //if uv index is low (1-2)
-    uvIndex.setAttribute("class", " bg-success text-light ");
+    uvIndex.setAttribute("class", "bg-success text-light ");
   } else if (currentUv > 3 && currentUv < 6) {
     //if uv index is moderate (3-5)
     uvIndex.setAttribute("class", "bg-warning text-light ");
@@ -135,13 +135,13 @@ function search(city) {
 function renderCities() {
   // Render a new link for each city
   for (var i = 0; i < citiesHistory.length; i++) {
-    let historyLink = document.createElement("a");
+    let historyLink = document.createElement("li");
     historyLink.textContent = citiesHistory[i];
+    searchHistoryList.appendChild(historyLink);
     //event listener for historyLink to retrieve the weather for each city searched
     historyLink.addEventListener("click", function () {
       displayWeather(historyLink.textContent);
     });
-    searchHistoryList.appendChild(historyLink);
   }
 }
 
@@ -155,6 +155,7 @@ function formSubmit(event) {
   //this will push the city searched to empty array defined at the top of script and set the city in local storage
   citiesHistory.push(cityInputElement.value);
   localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory));
+  cityInputElement.value = "";
 }
 
 //function displaying fahrenheit temp
@@ -180,3 +181,5 @@ fahrenheitLink.addEventListener("click", displayFahrenheitTemperature);
 celsiusLink.addEventListener("click", displayCelsiusTemperature);
 
 search("Paris");
+
+renderCities();
