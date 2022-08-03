@@ -132,27 +132,28 @@ function search(city) {
 }
 
 // function to render search cities in links appended to navbar
-function renderCities() {
+function getHistory() {
   const savedCities = JSON.parse(localStorage.getItem("citiesHistory"));
   // Render a new link for each city
-  for (var i = 0; i < savedCities.length; i++) {
-    const savedCity = savedCities[i];
-    const historyLink = document.createElement("button");
-    historyLink.setAttribute(
-      "class",
-      "btn btn-primary text-capitalize custom-search"
-    );
-    historyLink.textContent = savedCity;
-    searchHistoryList.appendChild(historyLink);
-    //event listener for historyLink to retrieve the weather for each city searched
-    historyLink.addEventListener("click", function () {
-      let city = historyLink.innerHTML;
-      search(city);
-      cityEl.textContent = historyLink.innerHTML;
-    });
-  }
+  for (var i = 0; i < savedCities.length; i++) {createButton(savedCities[i])}
 }
 
+function createButton(searchedCity) {
+ 
+  const historyLink = document.createElement("button");
+  historyLink.setAttribute(
+    "class",
+    "btn btn-primary text-capitalize custom-search"
+  );
+  historyLink.textContent = searchedCity;
+  searchHistoryList.appendChild(historyLink);
+  //event listener for historyLink to retrieve the weather for each city searched
+  historyLink.addEventListener("click", function () {
+    let city = historyLink.innerHTML;
+    search(city);
+    cityEl.textContent = historyLink.innerHTML;
+  });
+}
 //function called once the search button is clicked
 function formSubmit(event) {
   event.preventDefault();
@@ -161,9 +162,10 @@ function formSubmit(event) {
   search(cityInputElement.value);
   //this will push the city searched to empty array defined at the top of script and set the city in local storage
   citiesHistory.push(cityInputElement.value);
+  console.log(citiesHistory);
   localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory));
+  createButton(cityInputElement.value);
   cityInputElement.value = "";
-  renderCities();
 }
 
 //function displaying fahrenheit temp
@@ -189,3 +191,5 @@ fahrenheitLink.addEventListener("click", displayFahrenheitTemperature);
 celsiusLink.addEventListener("click", displayCelsiusTemperature);
 
 search("Paris");
+
+getHistory();
