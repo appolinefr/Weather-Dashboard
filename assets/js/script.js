@@ -3,7 +3,7 @@ const fahrenheitLink = document.querySelector("#fahrenheit-link");
 const celsiusLink = document.querySelector("#celsius-link");
 const form = document.querySelector("#search-form");
 const searchHistoryList = document.getElementById("cityHistory");
-
+const cityEl = document.querySelector("#city");
 //I need an empty array that will hold each city from search and save it in local storage
 const citiesHistory = [];
 let celsiusTemperature = null;
@@ -133,14 +133,22 @@ function search(city) {
 
 // function to render search cities in links appended to navbar
 function renderCities() {
+  const savedCities = JSON.parse(localStorage.getItem("citiesHistory"));
   // Render a new link for each city
-  for (var i = 0; i < citiesHistory.length; i++) {
-    let historyLink = document.createElement("li");
-    historyLink.textContent = citiesHistory[i];
+  for (var i = 0; i < savedCities.length; i++) {
+    const savedCity = savedCities[i];
+    const historyLink = document.createElement("button");
+    historyLink.setAttribute(
+      "class",
+      "btn btn-primary text-capitalize custom-search"
+    );
+    historyLink.textContent = savedCity;
     searchHistoryList.appendChild(historyLink);
     //event listener for historyLink to retrieve the weather for each city searched
     historyLink.addEventListener("click", function () {
-      displayWeather(historyLink.textContent);
+      let city = historyLink.innerHTML;
+      search(city);
+      cityEl.textContent = historyLink.innerHTML;
     });
   }
 }
@@ -149,13 +157,13 @@ function renderCities() {
 function formSubmit(event) {
   event.preventDefault();
   let cityInputElement = document.querySelector("#city-input");
-  let city = document.querySelector("#city");
-  city.innerHTML = cityInputElement.value;
+  cityEl.innerHTML = cityInputElement.value;
   search(cityInputElement.value);
   //this will push the city searched to empty array defined at the top of script and set the city in local storage
   citiesHistory.push(cityInputElement.value);
   localStorage.setItem("citiesHistory", JSON.stringify(citiesHistory));
   cityInputElement.value = "";
+  renderCities();
 }
 
 //function displaying fahrenheit temp
@@ -174,12 +182,10 @@ function displayCelsiusTemperature(event) {
 }
 
 //event listener handling the search button click
-form.addEventListener("submit", formSubmit, renderCities);
+form.addEventListener("submit", formSubmit);
 
 fahrenheitLink.addEventListener("click", displayFahrenheitTemperature);
 
 celsiusLink.addEventListener("click", displayCelsiusTemperature);
 
 search("Paris");
-
-renderCities();
