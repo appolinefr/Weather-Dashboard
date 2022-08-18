@@ -20,6 +20,7 @@ function formatDay(timestamp) {
 
 // function dynamically creating columns and displaying forecast
 function displayForecast(data) {
+  console.log(data);
   let forecastElement = document.querySelector("#forecast");
 
   let forecastHTML = `<div class="row">`;
@@ -47,6 +48,13 @@ function displayForecast(data) {
                     ><span class="temperature-min"> ${Math.round(
                       forecast[i].temp.min
                     )}°</span>
+                    </br>
+                     <span class="temparature-max"> ${Math.round(
+                       forecast[i].humidity
+                     )}%</span
+                    ><span class="temperature-min"> ${Math.round(
+                      forecast[i].wind_speed
+                    )}km/h</span>
                   </div>
                 </div>`;
   }
@@ -135,11 +143,12 @@ function search(city) {
 function getHistory() {
   const savedCities = JSON.parse(localStorage.getItem("citiesHistory"));
   // Render a new link for each city
-  for (var i = 0; i < savedCities.length; i++) {createButton(savedCities[i])}
+  for (var i = 0; i < savedCities.length; i++) {
+    createButton(savedCities[i]);
+  }
 }
 
 function createButton(searchedCity) {
- 
   const historyLink = document.createElement("button");
   historyLink.setAttribute(
     "class",
