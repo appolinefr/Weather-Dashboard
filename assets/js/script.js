@@ -152,7 +152,7 @@ function createButton(searchedCity) {
   const historyLink = document.createElement("button");
   historyLink.setAttribute(
     "class",
-    "btn btn-primary text-capitalize custom-search"
+    "nav-item btn btn-primary text-capitalize custom-search"
   );
   historyLink.textContent = searchedCity;
   searchHistoryList.appendChild(historyLink);
